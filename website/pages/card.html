@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Hearthstone Vault</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ static_url('bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <style media="screen">
+        body {
+          background-color: #FFF1D7;
+        }
+
+        .search-panel {
+          margin-left:50px;
+        }
+
+        #cards {
+          padding:50px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="row" style="margin-bottom:100px;">
+      <center><a href="/"><img src="{{static_url('images/templates/banner.png')}}"/></a></center>
+    </div>
+    <div class="row" style="margin: auto; max-width: 1000px;">
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <image src="/static/images/{{card['Image']}}"/>
+      </div>
+      <div class="col-sm-6 col-md-6 col-lg-6">
+        <div class="input-group">
+          <span style="margin-right:10px;">Nom :</span>
+          <span>{{card['Nom']}}</span>
+        </div>
+        <div class="input-group">
+          <span style="margin-right:10px;">Classe :</span>
+          <span>{{card['Classe']}}</span>
+        </div>
+        <div class="input-group">
+          <span style="margin-right:10px;">Type :</span>
+          <span>{{card['Type']}}</span>
+        </div>
+        <div class="input-group">
+          <span style="margin-right:10px;">Rareté :</span>
+          <span>{{card['Rarete']}}</span>
+        </div>
+        <div class="input-group">
+          <span style="margin-right:10px;">Coût en Mana :</span>
+          <span>{{card['Cout en mana']}}</span>
+        </div>
+        {% if card.has_key('Attaque') %}
+          <div class="input-group">
+            <span style="margin-right:10px;">Attaque :</span>
+            <span>{{card['Attaque']}}</span>
+          </div>
+        {% end %}
+        {% if card.has_key('Vie') %}
+          <div class="input-group">
+            <span style="margin-right:10px;">Vie :</span>
+            <span>{{card['Vie']}}</span>
+          </div>
+        {% end %}
+        <div class="input-group">
+          <span style="margin-right:10px;">Description :</span>
+          <span>{{card['Description']}}</span>
+        </div>
+        <div class="input-group">
+          <span style="margin-right:10px;">Texte d'ambiance :</span>
+          <span>{{card["Texte d'ambiance"]}}</span>
+        </div>
+        <div class="input-group">
+          <span>
+            Dans ma collection :
+          </span>
+          <span class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              {{card['Dans ma Collection']}}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" id="dans-ma-collection" aria-labelledby="dropdownMenu1">
+              {% for i in [0,1,2] %}
+                {% block i %}
+                  <li><a class="nb-copies" href="#">{{i}}</a></li>
+                {% end %}
+              {% end %}
+            </ul>
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- jQuery -->
+    <script src="{{ static_url('bower_components/jquery/dist/jquery.min.js')}}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{ static_url('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+
+    <script type="text/javascript">
+      if ("WebSocket" in window) {
+        console.log("WebSocket is supported by your Browser!");
+        var ws = new WebSocket("ws://localhost:8080/websocket");
+
+        var waitForSocketConnection = function (socket, callback){
+          setTimeout(
+              function(){
+                  if (socket.readyState === 1) {
+                      if(callback !== undefined){
+                          callback();
+                      }
+                      return;
+                  } else {
+                      waitForSocketConnection(socket,callback);
+                  }
+              }, 5);
+        };
+
+        ws.onopen = function() {
+            console.log("Connection is opened...");
+        };
+
+        ws.onclose = function() {
+            console.log("Connection is closed...");
+        };
+
+        $(function() {
+          waitForSocketConnection(ws, function() {
+            //the selected choice are displayed in the dropdown lists
+            $(".dropdown-menu li a").click(function() {
+              $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+              $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+            });
+          });
+
+          $('a.nb-copies').click(function(e) {
+              ws.send(JSON.stringify({
+                'header': 'dans ma collection',
+                'copies': $(this).text(),
+                '_id': "{{card['_id']}}"
+              }));
+              e.preventDefault();
+          });
+        });
+      } else {
+           console.log("WebSocket NOT supported by your Browser!");
+       }
+    </script>
+
+</body>

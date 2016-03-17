@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Quizz</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ static_url('bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <style media="screen">
+        body {
+          background-color: #FFF1D7;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="row">
+      <center><a href="/"><img src="{{static_url('images/templates/banner.png')}}"/></a></center>
+    </div>
+    <div class="row" id="image" style="margin-bottom:100px;">
+
+    </div>
+
+    <!-- jQuery -->
+    <script src="{{ static_url('bower_components/jquery/dist/jquery.min.js')}}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{ static_url('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+
+    <script>
+
+        var id = undefined;
+        var question = undefined;
+        var score = 0;
+        if ("WebSocket" in window) {
+          console.log("WebSocket is supported by your Browser!");
+          var ws = new WebSocket("ws://localhost:8080/websocket");
+
+          var waitForSocketConnection = function (socket, callback){
+                setTimeout(
+                    function(){
+                        if (socket.readyState === 1) {
+                            if(callback !== undefined){
+                                callback();
+                            }
+                            return;
+                        } else {
+                            waitForSocketConnection(socket,callback);
+                        }
+                    }, 5);
+            };
+
+            ws.onopen = function() {
+                console.log("Connection is opened...");
+            };
+
+            ws.onclose = function() {
+                console.log("Connection is closed...");
+            };
+
+            ws.onmessage = function (evt) {
+              var received_msg = JSON.parse(evt.data);
+              if (received_msg['header'] == 'new quizz') {
+                $('#image').empty();
+                id = received_msg["_id"]
+                question = received_msg['question'];
+                if (question == 'Attaque') {
+                  $('#image').append('<center><img style="margin-bottom:20px;" src="/static/images/quizz/'+escape(received_msg["Image"])+'" width=200/></center>');
+                  var text = '<center>Quelle est son Attaque?&nbsp;\
+                              <div class="btn-group">\
+                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">\
+                                    <span class="caret"></span>\
+                                </button>\
+                                <ul id="Nom" class="dropdown-menu">'
+                  for (var i =0 ; i < received_msg['propositions'].length ; i++)
+                    text += '<li><a href="#" onclick="send_answer(this)">'+received_msg['propositions'][i]+'</a></li>';
+                  text += '</ul></div></center>';
+                  $('#image').append(text);
+                } else if (question == 'Vie') {
+                  $('#image').append('<center><img style="margin-bottom:20px;" src="/static/images/quizz/'+escape(received_msg["Image"])+'" width=200/></center>');
+                  var text = '<center>Quelle est sa Vie?&nbsp;\
+                              <div class="btn-group">\
+                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">\
+                                    <span class="caret"></span>\
+                                </button>\
+                                <ul id="Nom" class="dropdown-menu">'
+                  for (var i =0 ; i < received_msg['propositions'].length ; i++)
+                    text += '<li><a href="#" onclick="send_answer(this)">'+received_msg['propositions'][i]+'</a></li>';
+                  text += '</ul></div></center>';
+                  $('#image').append(text);
+                } else if (question == 'Cout en mana') {
+                  var text = '<center>Quel est son Coût en Mana?&nbsp;\
+                              <div class="btn-group">\
+                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">\
+                                    <span class="caret"></span>\
+                                </button>\
+                                <ul id="Nom" class="dropdown-menu">'
+                  for (var i =0 ; i < received_msg['propositions'].length ; i++)
+                    text += '<li><a href="#" onclick="send_answer(this)">'+received_msg['propositions'][i]+'</a></li>';
+                  text += '</ul></div></center>';
+                  $('#image').append(text);
+                } else if (question == 'Nom') {
+                  $('#image').append('<center><img style="margin-bottom:20px;" src="/static/images/quizz/'+escape(received_msg["Image"])+'" width=200/></center>');
+                  var text = '<center>Quel est son Nom?&nbsp;\
+                              <div class="btn-group">\
+                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">\
+                                    <span class="caret"></span>\
+                                </button>\
+                                <ul id="Nom" class="dropdown-menu">'
+                  for (var i =0 ; i < received_msg['propositions'].length ; i++)
+                    text += '<li><a href="#" onclick="send_answer(this)">'+received_msg['propositions'][i]+'</a></li>';
+                  text += '</ul></div></center>';
+                  $('#image').append(text);
+                } else if (question == 'Description') {
+                  $('#image').append('<center><img style="margin-bottom:20px;" src="/static/images/quizz/'+escape(received_msg["Image"])+'" width=200/></center>');
+                  var text = '<center>Quelle est sa Description?&nbsp;\
+                              <div class="btn-group">\
+                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">\
+                                    <span class="caret"></span>\
+                                </button>\
+                                <ul id="Nom" class="dropdown-menu">'
+                  for (var i =0 ; i < received_msg['propositions'].length ; i++)
+                    text += '<li><a href="#" onclick="send_answer(this)">'+received_msg['propositions'][i]+'</a></li>';
+                  text += '</ul></div></center>';
+                  $('#image').append(text);
+                } else if (question == 'Image&Nom') {
+                  var text = '<center>Quelle carte porte le nom de '+received_msg['Nom']+'?</center><center>';
+                  for (var i =0 ; i < received_msg['propositions'].length ; i++)
+                    text += '<a href="#" onclick="send_answer(this)" id='+received_msg['propositions'][i]+'><img src="/static/images/quizz/'+escape(received_msg['propositions'][i])+'" width=200/></a></li>';
+                  text+="</center>";
+                  $('#image').append(text);
+                } else if (question == 'Image&Description') {
+                  var text = '<center>Quelle carte porte la description suivante:</center><center>';
+                  text+= '<center>"'+received_msg['Description']+'"</center>'
+                  for (var i =0 ; i < received_msg['propositions'].length ; i++)
+                    text += '<a href="#" onclick="send_answer(this)" id='+received_msg['propositions'][i]+'><img src="/static/images/quizz/'+escape(received_msg['propositions'][i])+'" width=200/></a></li>';
+                  text+="</center>";
+                  $('#image').append(text);
+                }
+              } else if (received_msg['header'] == 'got answer') {
+                $('#image').empty();
+                $('#image').append('<center><img src="/static/images/quizz/'+escape(received_msg["Image"])+'" width=200/></center>');
+                $('#image').append('<center><button style="margin-top:20px;margin-bottom:20px;" type="button" class="btn btn-default btn-success" onclick="new_quizz()">Nouveau Quizz</button></center>');
+                if (received_msg['point'] != 0) {
+                    score += received_msg['point'];
+                    $('#image').append('<center>Bravo!! &nbspPoints totaux:&nbsp;'+score+'&nbsp;(meilleur score: '+received_msg['best_score']+')</center>');
+                } else {
+                    score = 0;
+                    $('#image').append('<center>Dommage... &nbspPoints totaux:&nbsp;'+score+'&nbsp;(meilleur score: '+received_msg['best_score']+')</center>');
+                }
+              }
+            };
+
+            var send_answer = function(el) {
+              var answer = {
+                  'header':'send answer',
+                  '_id': id,
+                  'question': question,
+                  'current_score': score
+              }
+              if (question == 'Attaque') {
+                  answer['answer'] = parseInt(answer['answer'] = el.text);
+              } else if (question == 'Vie') {
+                  answer['answer'] = parseInt(answer['answer'] = el.text);
+              } else if (question == 'Cout en mana') {
+                  answer['answer'] = parseInt(answer['answer'] = el.text);
+              } else if (question == 'Nom') {
+                  answer['answer'] = el.text;
+              } else if (question == 'Description') {
+                  answer['answer'] = el.text;
+              } else if (question == 'Image&Nom') {
+                answer['answer'] = el.id;
+              }  else if (question == 'Image&Description') {
+                answer['answer'] = el.id;
+              }
+              ws.send(JSON.stringify(answer));
+            };
+
+            var new_quizz = function() {
+              ws.send(JSON.stringify({
+                  'header':'new quizz'
+              }));
+            };
+
+            $(function() {
+              waitForSocketConnection(ws, function() {
+                new_quizz();
+              });
+            });
+        } else {
+            console.log("WebSocket NOT supported by your Browser!");
+        }
+    </script>
+
+</body>
+
+</html>

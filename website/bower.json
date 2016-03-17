@@ -1,0 +1,15 @@
+{
+  "name": "Hearthstone Vault",
+  "version": "0.0.0",
+  "authors": [
+    "Fabrice Jossinet"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.1"
+  }
+}

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Hearthstone Vault</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ static_url('bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <style media="screen">
+        body {
+          background-color: #FFF1D7;
+        }
+
+        .search-panel {
+          margin-left:50px;
+        }
+
+        #cards {
+          padding:50px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="row banner">
+      <center><a href="/"><img src="{{static_url('images/templates/banner.png')}}"/></a></center>
+    </div>
+    <div class="row banner">
+      <center><a href="/quizz">Un petit quizz?</a></center>
+    </div>
+    <div class="row search-panel">
+        <div class="col-lg-6">
+            <div class="form-group">
+              <label  style="margin-top:10px;">Nom</label>
+              <input type="text" class="form-control" id="Nom" placeholder="Nom">
+              <label  style="margin-top:10px;">Description</label>
+              <input type="text" class="form-control" id="Description" placeholder="Description">
+              <label  style="margin-top:10px;">Coût en mana</label>
+              <input type="text" class="form-control" id="Cout-en-mana" placeholder="Coût en mana">
+              <label  style="margin-top:10px;">Attaque</label>
+              <input type="text" class="form-control" id="Attaque" placeholder="Attaque">
+              <label  style="margin-top:10px;">Vie</label>
+              <input type="text" class="form-control" id="Vie" placeholder="Vie">
+              <label style="margin-top:10px;">Prédéfinis</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-default" id="aoe">AOE</button>
+                <button type="button" class="btn btn-default" id="bonus-attaque">Bonus Attaque</button>
+                <button type="button" class="btn btn-default" id="charge">Charge</button>
+                <button type="button" class="btn btn-default" id="camouflage">Camouflage</button>
+                <button type="button" class="btn btn-default" id="action-sur-arme">Action sur l'arme</button>
+                <button type="button" class="btn btn-default" id="pour-chaque">Pour chaque</button>
+                <button type="button" class="btn btn-default" id="provocation">Provocation</button>
+                <button type="button" class="btn btn-default" id="cri-de-guerre">Cri de guerre</button>
+                <button type="button" class="btn btn-default" id="silence">Silence</button>
+                <button type="button" class="btn btn-default" id="secret">Secret</button>
+                <button type="button" class="btn btn-default" id="rale-agonie">Râle d'agonie</button>
+              </div>
+              <label style="margin-top:10px;">Decks</label>
+              <div class="input-group">
+                <span class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Classe de deck
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a class="classe-deck" href="#">Toutes</a></li>
+                    <li><a class="classe-deck" href="#">Chaman</a></li>
+                    <li><a class="classe-deck" href="#">Chasseur</a></li>
+                    <li><a class="classe-deck" href="#">Démoniste</a></li>
+                    <li><a class="classe-deck" href="#">Druide</a></li>
+                    <li><a class="classe-deck" href="#">Guerrier</a></li>
+                    <li><a class="classe-deck" href="#">Mage</a></li>
+                    <li><a class="classe-deck" href="#">Paladin</a></li>
+                    <li><a class="classe-deck" href="#">Prêtre</a></li>
+                    <li><a class="classe-deck" href="#">Voleur</a></li>
+                  </ul>
+                </span>
+
+                <span class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Type de deck
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <li><a class="type-deck" href="#">Mes decks</a></li>
+                    <li><a class="type-deck" href="#">Top semaine</a></li>
+                    <li><a class="type-deck" href="#">Top mois</a></li>
+                    <li><a class="type-deck" href="#">Top total</a></li>
+                  </ul>
+                </span>
+
+                <span class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Nom du deck
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu3" id="decks-names">
+
+                  </ul>
+                </span>
+                  <span id="selected-deck"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+              <label  style="margin-top:10px;">Rareté</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-default btn-success" id="Toutes">Toutes</button>
+                <button type="button" class="btn btn-default" id="Basique">Basiques</button>
+                <button type="button" class="btn btn-default" id="Commune">Communes</button>
+                <button type="button" class="btn btn-default" id="Rare">Rares</button>
+                <button type="button" class="btn btn-default" id="Epique">Epiques</button>
+                <button type="button" class="btn btn-default" id="Légendaire">Légendaires</button>
+              </div>
+              <label  style="margin-top:10px;">Type</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-default btn-success" id="Tous">Tous</button>
+                <button type="button" class="btn btn-default" id="Sort">Sort</button>
+                <button type="button" class="btn btn-default" id="Serviteur">Serviteur</button>
+                <button type="button" class="btn btn-default" id="Arme">Arme</button>
+              </div>
+              <label  style="margin-top:10px;">Race</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-default btn-success" id="Toutes-races">Toutes</button>
+                <button type="button" class="btn btn-default" id="Bête">Bête</button>
+                <button type="button" class="btn btn-default" id="Démon">Démon</button>
+                <button type="button" class="btn btn-default" id="Dragon">Dragon</button>
+                <button type="button" class="btn btn-default" id="Méca">Méca</button>
+                <button type="button" class="btn btn-default" id="Murloc">Murloc</button>
+                <button type="button" class="btn btn-default" id="Pirate">Pirate</button>
+                <button type="button" class="btn btn-default" id="Totem">Totem</button>
+              </div>
+              <label  style="margin-top:10px;">Classe</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-default btn-success" id="Toutes-classes">Toutes</button>
+                <button type="button" class="btn btn-default" id="Chaman">Chaman</button>
+                <button type="button" class="btn btn-default" id="Chasseur">Chasseur</button>
+                <button type="button" class="btn btn-default" id="Démoniste">Démoniste</button>
+                <button type="button" class="btn btn-default" id="Druide">Druide</button>
+                <button type="button" class="btn btn-default" id="Guerrier">Guerrier</button>
+                <button type="button" class="btn btn-default" id="Mage">Mage</button>
+                <button type="button" class="btn btn-default" id="Paladin">Paladin</button>
+                <button type="button" class="btn btn-default" id="Prêtre">Prêtre</button>
+                <button type="button" class="btn btn-default" id="Voleur">Voleur</button>
+                <button type="button" class="btn btn-default" id="Neutre">Neutre</button>
+                <button type="button" class="btn btn-default" id="Non-Neutre">Non Neutre</button>
+              </div>
+              <label  style="margin-top:10px;">Trier par</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-default btn-success" id="Mana-tri">Mana</button>
+                <button type="button" class="btn btn-default" id="Attaque-tri">Attaque</button>
+                <button type="button" class="btn btn-default" id="Vie-tri">Vie</button>
+                <button type="button" class="btn btn-default" id="Nom-tri">Nom</button>
+              </div>
+              <label  style="margin-top:10px;">Possédées</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-default btn-success" id="indifferent">Indifférent</button>
+                <button type="button" class="btn btn-default" id="possedees-oui">Oui</button>
+                <button type="button" class="btn btn-default" id="possedees-non">Non</button>
+              </div>
+              <label  style="margin-top:10px;">Quizz</label>
+              <div class="input-group">
+                <button type="button" class="btn btn-default" id="quizz-oui">Oui</button>
+                <button type="button" class="btn btn-default btn-success" id="quizz-non">Non</button>
+              </div>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row search-panel">
+      <div class="col-lg-12">
+        <button type="submit" class="btn btn-default" id="search" onClick="search()" disabled>Chercher</button>&nbsp;&nbsp;<span id="result"></span>
+        <button type="submit" class="btn btn-default" id="imprimer" onClick="imprimer()">Imprimer</button>&nbsp;&nbsp;<span id="result"></span>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-12"  id="cards">
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{{ static_url('bower_components/jquery/dist/jquery.min.js')}}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{ static_url('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+
+    <script>
+        var rarete = undefined;
+        var type = undefined;
+        var race = undefined;
+        var classe = undefined;
+        var possedee = undefined;
+        var tri = "Cout en mana";
+        var ordre = 1;
+        var quizz = false;
+        var deck_name = undefined;
+        var deck_type = undefined;
+        var deck_classe = undefined;
+
+        if ("WebSocket" in window) {
+          console.log("WebSocket is supported by your Browser!");
+          var ws = new WebSocket("ws://localhost:8080/websocket");
+          var search = function() {
+            ws.send(JSON.stringify({
+                'header':'search',
+                'Nom': $('input#Nom').val(),
+                'Description': $('input#Description').val(),
+                'Cout en mana': $('input#Cout-en-mana').val(),
+                'Attaque': $('input#Attaque').val(),
+                'Vie': $('input#Vie').val(),
+                "Rarete": rarete,
+                "Type": type,
+                "Race": race,
+                "Classe": classe,
+                "Tri": tri,
+                "Ordre": ordre,
+                "Possedee": possedee,
+                "Deck-type": deck_type,
+                "Deck-name": deck_name
+            }));
+          };
+
+          var imprimer = function() {
+            $('.search-panel').hide();
+            $('.banner').hide();
+            $('.card_link').removeAttr("href");
+            $('.card_image').removeAttr("style");
+            $('.card_image').attr("width", 170);
+            $('.card_image').each(function(index) {
+                if ($(this).attr("src").endsWith("_2.png"))
+                  $(this).attr("src", $(this).attr("src").split("_2.png")[0]+".jpg");
+            });
+
+            $('br').remove();
+          };
+
+          var waitForSocketConnection = function (socket, callback){
+                setTimeout(
+                    function(){
+                        if (socket.readyState === 1) {
+                            if(callback !== undefined){
+                                callback();
+                            }
+                            return;
+                        } else {
+                            waitForSocketConnection(socket,callback);
+                        }
+                    }, 5);
+            };
+
+            ws.onopen = function() {
+                console.log("Connection is opened...");
+            };
+
+            ws.onclose = function() {
+                console.log("Connection is closed...");
+            };
+
+            ws.onmessage = function (evt) {
+              var received_msg = JSON.parse(evt.data);
+              if (received_msg['header'] == 'cards found') {
+                $('#cards').empty();
+                var length = received_msg['cards'].length;
+                $('#result').text(length+' cartes trouvée(s) ('+received_msg['possedees']+' cartes possédées)');
+                var current_value = undefined,
+                    class_value = undefined;
+                for (var i = 0; i < length; i++) {
+                    var card = received_msg["cards"][i];
+                    if (tri == "Cout en mana") {
+                        if (current_value != undefined && current_value != card['Cout en mana']) {
+                          $('#cards').append('<br/><br/><br/>');
+                          class_value = undefined;
+                        }
+                        current_value = card['Cout en mana'];
+                        class_value = card['Classe'];
+                    } else if (tri == "Vie") {
+                        if (current_value != undefined && current_value != card['Vie'])
+                          $('#cards').append('<br/><br/><br/>');
+                        current_value = card['Vie'];
+                        class_value = card['Classe'];
+                    } else if (tri == "Attaque") {
+                        if (current_value != undefined && current_value != card['Attaque'])
+                          $('#cards').append('<br/><br/><br/>');
+                        current_value = card['Attaque'];
+                        class_value = card['Classe'];
+                    }  else if (tri == "Nom") {
+                        if (current_value != undefined && current_value != card['Nom'].charAt(0))
+                          $('#cards').append('<br/><br/><br/>');
+                        current_value = card['Nom'].charAt(0);
+                        class_value = card['Classe'];
+                    }
+                    if (quizz == true) {
+                      $('#cards').append('<img id="'+card["Image"]+'" src="/static/images/quizz/'+escape(card["Image"].split("/")[card["Image"].split("/").length-1])+'" width=200/>')
+                    }
+                    else {
+                      if (deck_type != undefined && deck_name != undefined) {//cards listed in a deck
+                        var style = "";
+                        if (card['Quantite'] > card['Dans ma Collection'])
+                          style='style="border:2px solid Red"';
+                        if (card['Quantite'] == 1)
+                          $('#cards').append('<a class="card_link" href="/card?nom='+card['Nom']+'" target="_blank"><img class="card_image" id="'+card["Image"]+'" src="/static/images/'+escape(card["Image"])+'" width=200 '+style+'/></a>')
+                        else  if (card['Quantite'] == 2)
+                          $('#cards').append('<a class="card_link" href="/card?nom='+card['Nom']+'" target="_blank"><img class="card_image" id="'+card["Image"]+'" src="/static/images/'+escape(card["Image"]).split('.jpg')[0]+'_2.png" width=200 '+style+'/></a>')
+                      } else {
+                        if (card['Dans ma Collection'] == 0) {
+                          $('#cards').append('<a class="card_link" href="/card?nom='+card['Nom']+'" target="_blank"><img class="card_image" id="'+card["Image"]+'" src="/static/images/'+escape(card["Image"])+'" width=200 style="border:2px solid Red"/></a>')
+                        } else if (card['Dans ma Collection'] == 1) {
+                          $('#cards').append('<a class="card_link" href="/card?nom='+card['Nom']+'" target="_blank"><img class="card_image" id="'+card["Image"]+'" src="/static/images/'+escape(card["Image"])+'" width=200></a>')
+                        }  else if (card['Dans ma Collection'] == 2) {
+                          $('#cards').append('<a class="card_link" href="/card?nom='+card['Nom']+'" target="_blank"><img class="card_image" id="'+card["Image"]+'" src="/static/images/'+escape(card["Image"]).split('.jpg')[0]+'_2.png" width=200></a>')
+                        }
+                      }
+                    }
+                }
+              } else if (received_msg['header'] == 'got decks list') {
+                $('#decks-names').empty();
+                var el = $('<li><a class="type-deck" class="deck-name" href="#">Aucun</a></li>');
+                $('#decks-names').append(el);
+                el.click(function(e) {
+                    deck_type = undefined;
+                    deck_name = undefined;
+                    $('#selected-deck').empty();
+                    e.preventDefault();
+                    $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                    $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+                });
+                for (var i=0 ; i < received_msg['decks'].length ; i++) {
+                    var deck = received_msg['decks'][i];
+                    var el = $('<li><a class="type-deck" class="deck-name" href="'+deck['Lien']+'">('+deck['Possedees']+'%) '+deck['Nom']+'</a></li>');
+                    $('#decks-names').append(el);
+                    el.click(function(e) {
+                          $('#selected-deck').empty();
+                          deck_type = received_msg['type'];
+                          deck_name = $(this).text().split('%)')[$(this).text().split('%)').length-1].trim();
+                          if (deck_type == "Top semaine" || deck_type == "Top mois" || deck_type == "Top total" )
+                            $('#selected-deck').append('<a href="'+$("a", this).attr('href')+'" target="_blank">'+deck_type+": "+$(this).text()+'</a>');
+                          e.preventDefault();
+                          $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                          $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+                      });
+                }
+              }
+            };
+
+            $(function() {
+              waitForSocketConnection(ws, function() {
+                //the selected choice are displayed in the dropdown lists
+                $(".dropdown-menu li a").click(function() {
+                  $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                  $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+                });
+
+                $('a.type-deck').click(function(e) {
+                  ws.send(JSON.stringify({
+                    'header': 'get decks list',
+                    'type': $(this).text(),
+                    'Classe': deck_classe
+                  }));
+                    e.preventDefault();
+                });
+
+                $('a.classe-deck').click(function(e) {
+                    deck_classe = $(this).text()
+                    if (deck_classe == "Toutes")
+                      deck_classe = undefined;
+                    e.preventDefault();
+                });
+
+                $('button#search')[0].disabled = false;
+
+                $('#aoe').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('inflige.+à.+tous.+(adversaires|serviteurs)')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#bonus-attaque').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('\\+[0-9]+.+ATQ')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#charge').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('(^Charge| Charge)')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#camouflage').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('camouflage')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#provocation').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('provocation')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#cri-de-guerre').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('cri de guerre')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#silence').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('silence')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#secret').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('secret')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#rale-agonie').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val("Râle d'agonie")
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#action-sur-arme').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('arme[^s]')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#pour-chaque').click(function() {
+                      $("#Nom").val("");
+                      $('#Description').val('pour chaque')
+                      $("#Cout-en-mana").val("");
+                      $("#Attaque").val("");
+                      $("#Vie").val("");
+                });
+
+                $('#Toutes').click(function(){
+                    if (rarete == undefined)
+                        $('#Toutes').removeClass('btn-success')
+                    else
+                      $("#"+rarete).removeClass('btn-success')
+                    rarete = undefined;
+                    $(this).addClass('btn-success')
+                });
+                $('#Basique').click(function(){
+                    if (rarete == undefined)
+                        $('#Toutes').removeClass('btn-success')
+                    else
+                      $("#"+rarete).removeClass('btn-success')
+                    rarete = "Basique";
+                    $(this).addClass('btn-success')
+                });
+                $('#Commune').click(function(){
+                    if (rarete == undefined)
+                      $('#Toutes').removeClass('btn-success')
+                    else
+                      $("#"+rarete).removeClass('btn-success')
+                    rarete = "Commune";
+                    $(this).addClass('btn-success')
+                });
+                $('#Rare').click(function(){
+                    if (rarete == undefined)
+                        $('#Toutes').removeClass('btn-success')
+                    else
+                      $("#"+rarete).removeClass('btn-success')
+                    rarete = "Rare";
+                    $(this).addClass('btn-success')
+                });
+                $('#Epique').click(function(){
+                    if (rarete == undefined)
+                        $('#Toutes').removeClass('btn-success')
+                    else
+                      $("#"+rarete).removeClass('btn-success')
+                    rarete = "Epique";
+                    $(this).addClass('btn-success')
+                });
+                $('#Légendaire').click(function(){
+                    if (rarete == undefined)
+                        $('#Toutes').removeClass('btn-success')
+                    else
+                      $("#"+rarete).removeClass('btn-success')
+                    rarete = "Légendaire";
+                    $(this).addClass('btn-success')
+                });
+
+                $('#Tous').click(function(){
+                    if (type == undefined)
+                        $('#Tous').removeClass('btn-success')
+                    else
+                      $("#"+type).removeClass('btn-success')
+                    type = undefined;
+                    $(this).addClass('btn-success')
+                });
+                $('#Sort').click(function(){
+                    if (type == undefined)
+                        $('#Tous').removeClass('btn-success')
+                    else
+                      $("#"+type).removeClass('btn-success')
+                    type = "Sort";
+                    $(this).addClass('btn-success')
+                });
+                $('#Serviteur').click(function(){
+                    if (type == undefined)
+                        $('#Tous').removeClass('btn-success')
+                    else
+                      $("#"+type).removeClass('btn-success')
+                    type = "Serviteur";
+                    $(this).addClass('btn-success')
+                });
+                $('#Arme').click(function(){
+                    if (type == undefined)
+                        $('#Tous').removeClass('btn-success')
+                    else
+                      $("#"+type).removeClass('btn-success')
+                    type = "Arme";
+                    $(this).addClass('btn-success')
+                });
+
+                $('#Toutes-races').click(function(){
+                    if (race == undefined)
+                        $('#Toutes-races').removeClass('btn-success')
+                    else
+                      $("#"+race).removeClass('btn-success')
+                    race = undefined;
+                    $(this).addClass('btn-success')
+                });
+                $('#Bête').click(function(){
+                    if (race == undefined)
+                        $('#Toutes-races').removeClass('btn-success')
+                    else
+                      $("#"+race).removeClass('btn-success')
+                    race = "Bête";
+                    $(this).addClass('btn-success')
+                });
+                $('#Démon').click(function(){
+                    if (race == undefined)
+                        $('#Toutes-races').removeClass('btn-success')
+                    else
+                      $("#"+race).removeClass('btn-success')
+                    race = "Démon";
+                    $(this).addClass('btn-success')
+                });
+                $('#Dragon').click(function(){
+                    if (race == undefined)
+                        $('#Toutes-races').removeClass('btn-success')
+                    else
+                      $("#"+race).removeClass('btn-success')
+                    race = "Dragon";
+                    $(this).addClass('btn-success')
+                });
+                $('#Méca').click(function(){
+                    if (race == undefined)
+                        $('#Toutes-races').removeClass('btn-success')
+                    else
+                      $("#"+race).removeClass('btn-success')
+                    race = "Méca";
+                    $(this).addClass('btn-success')
+                });
+                $('#Murloc').click(function(){
+                    if (race == undefined)
+                        $('#Toutes-races').removeClass('btn-success')
+                    else
+                      $("#"+race).removeClass('btn-success')
+                    race = "Murloc";
+                    $(this).addClass('btn-success')
+                });
+                $('#Pirate').click(function(){
+                    if (race == undefined)
+                        $('#Toutes-races').removeClass('btn-success')
+                    else
+                      $("#"+race).removeClass('btn-success')
+                    race = "Pirate";
+                    $(this).addClass('btn-success')
+                });
+                $('#Totem').click(function(){
+                    if (race == undefined)
+                        $('#Toutes-races').removeClass('btn-success')
+                    else
+                      $("#"+race).removeClass('btn-success')
+                    race = "Totem";
+                    $(this).addClass('btn-success')
+                });
+
+                $('#Toutes-classes').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = undefined;
+                    $(this).addClass('btn-success')
+                });
+                $('#Chaman').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Chaman";
+                    $(this).addClass('btn-success')
+                });
+                $('#Chasseur').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Chasseur";
+                    $(this).addClass('btn-success')
+                });
+                $('#Démoniste').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Démoniste";
+                    $(this).addClass('btn-success')
+                });
+                $('#Druide').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Druide";
+                    $(this).addClass('btn-success')
+                });
+                $('#Guerrier').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Guerrier";
+                    $(this).addClass('btn-success')
+                });
+                $('#Mage').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Mage";
+                    $(this).addClass('btn-success')
+                });
+                $('#Paladin').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Paladin";
+                    $(this).addClass('btn-success')
+                });
+                $('#Prêtre').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Prêtre";
+                    $(this).addClass('btn-success')
+                });
+                $('#Voleur').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Voleur";
+                    $(this).addClass('btn-success')
+                });
+                $('#Neutre').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Neutre";
+                    $(this).addClass('btn-success')
+                });
+                $('#Non-Neutre').click(function(){
+                    if (classe == undefined)
+                        $('#Toutes-classes').removeClass('btn-success')
+                    else
+                      $("#"+classe).removeClass('btn-success')
+                    classe = "Non-Neutre";
+                    $(this).addClass('btn-success')
+                });
+
+                $('#indifferent').click(function(){
+                    possedee = undefined;
+                    $('#possedees-oui').removeClass('btn-success');
+                    $('#possedees-non').removeClass('btn-success');
+                    $(this).addClass('btn-success')
+                });
+                $('#possedees-oui').click(function(){
+                    possedee = true;
+                    $('#indifferent').removeClass('btn-success');
+                    $('#possedees-non').removeClass('btn-success');
+                    $(this).addClass('btn-success')
+                });
+                $('#possedees-non').click(function(){
+                    possedee = false;
+                    $('#indifferent').removeClass('btn-success');
+                    $('#possedees-oui').removeClass('btn-success');
+                    $(this).addClass('btn-success')
+                });
+
+                $('#quizz-oui').click(function(){
+                    quizz = true;
+                    $('#quizz-non').removeClass('btn-success');
+                    $(this).addClass('btn-success')
+                });
+                $('#quizz-non').click(function(){
+                    quizz = false;
+                    $('#quizz-oui').removeClass('btn-success');
+                    $(this).addClass('btn-success')
+                });
+
+                $('#Mana-tri').click(function(){
+                    tri = "Cout en mana";
+                    $(this).addClass('btn-success')
+                    $("#Attaque-tri").removeClass('btn-success')
+                    $("#Vie-tri").removeClass('btn-success')
+                    $("#Nom-tri").removeClass('btn-success')
+                });
+                $('#Attaque-tri').click(function(){
+                    tri = "Attaque";
+                    $(this).addClass('btn-success')
+                    $("#Mana-tri").removeClass('btn-success')
+                    $("#Vie-tri").removeClass('btn-success')
+                    $("#Nom-tri").removeClass('btn-success')
+                });
+                $('#Vie-tri').click(function(){
+                    tri = "Vie";
+                    $(this).addClass('btn-success')
+                    $("#Mana-tri").removeClass('btn-success')
+                    $("#Attaque-tri").removeClass('btn-success')
+                    $("#Nom-tri").removeClass('btn-success')
+                });
+                $('#Nom-tri').click(function(){
+                    tri = "Nom";
+                    $(this).addClass('btn-success')
+                    $("#Mana-tri").removeClass('btn-success')
+                    $("#Attaque-tri").removeClass('btn-success')
+                    $("#Vie-tri").removeClass('btn-success')
+                });
+              });
+            });
+
+        } else {
+            console.log("WebSocket NOT supported by your Browser!");
+        }
+    </script>
+
+</body>
+
+</html>
