@@ -6,6 +6,7 @@ import urllib, sys, re, math, io, datetime
 from pymongo import MongoClient
 import unicodedata
 import commands
+import fire
 
 base_URL = "http://www.hearthstone-decks.com"
 db = MongoClient()['hearthstone']
@@ -72,7 +73,7 @@ def get_cards():
                                         info.append('???')
                             elif isinstance(_child, basestring) and len(_child.strip()):
                                 info.append(_child.strip())
-                    if len(info) and info[0] != 'BBcode':
+                    if len(info) and info[0] != 'BBcode' and info[0] != '???':
                         key = unicodedata.normalize('NFKD', info.pop(0)).encode('ASCII', 'ignore') #to remove accents in the keys (easier to handler)
                         if key in [u'Vie', u'Attaque', u'Cout en mana', u'Cout en poussiere', u'Valeur en poussiere']:
                             card_description[key] = int(' '.join(info))
@@ -294,11 +295,12 @@ def images():
             commands.getoutput("composite -geometry +10+20 website/images/resized.png website/images/composite.png website/images/%s_2.png"%f.split('.jpg')[0])
 
 if __name__ == '__main__':
+    fire.Fire()
     #get_cards()
     #cluster()
-    drop = True
-    get_decks(page="semaine", score_cutoff = 1, drop = drop)
-    get_decks(page="mois", score_cutoff = 5, drop = drop)
-    get_decks(page="total", score_cutoff = 10, drop = drop)
+    #drop = True
+    #get_decks(page="semaine", score_cutoff = 1, drop = drop)
+    #get_decks(page="mois", score_cutoff = 5, drop = drop)
+    #get_decks(page="total", score_cutoff = 10, drop = drop)
     #mine_decks()
     #fix_database()
