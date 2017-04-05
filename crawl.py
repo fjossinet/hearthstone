@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from bs4 import BeautifulSoup
-import urllib, sys, re, math, io, datetime
+import urllib, sys, re, math, io, datetime, os
 from pymongo import MongoClient
 import unicodedata
 import commands
@@ -110,6 +110,14 @@ def get_cards():
                     commands.getoutput('composite -gravity center website/images/templates/masque_serviteur.png website/images/%s.jpg website/images/quizz/%s.jpg'%(image_name, image_name))
                 elif card_description['Type'] == 'Arme':
                     commands.getoutput('composite -gravity center website/images/templates/masque_arme.png website/images/%s.jpg website/images/quizz/%s.jpg'%(image_name, image_name))
+                #Now the summoned cards (if any)
+                for img in soup2.find_all('img'):
+                    if img.has_attr('src') and img['src'].startswith('http://www.hearthstone-decks.com/upload'):
+                        if not os.path.exists('website/images/cartes_invoquees'):
+                            os.makedirs('website/images/cartes_invoquees')
+                        image_name = img['src'].split('/')[-1].split('.jpg')[0].split('-')[0]
+                        if not image_name.isdigit():
+                            urllib.urlretrieve(urllib.quote(img['src'].encode('utf8'), ':/'), "website/images/cartes_invoquees/%s.jpg"%image_name)
                 total_card_recovered += 1
                 print "%i cards recovered"%total_card_recovered
 
